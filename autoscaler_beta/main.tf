@@ -1,4 +1,6 @@
 resource "google_compute_autoscaler" "foobar" {
+  provider = "google-beta"
+
   name   = "my-autoscaler-${local.name_suffix}"
   zone   = "us-central1-f"
   target = "${google_compute_instance_group_manager.foobar.self_link}"
@@ -15,6 +17,8 @@ resource "google_compute_autoscaler" "foobar" {
 }
 
 resource "google_compute_instance_template" "foobar" {
+  provider = "google-beta"
+
   name           = "my-instance-template-${local.name_suffix}"
   machine_type   = "n1-standard-1"
   can_ip_forward = false
@@ -39,20 +43,34 @@ resource "google_compute_instance_template" "foobar" {
 }
 
 resource "google_compute_target_pool" "foobar" {
+  provider = "google-beta"
+
   name = "my-target-pool-${local.name_suffix}"
 }
 
 resource "google_compute_instance_group_manager" "foobar" {
+  provider = "google-beta"
+
   name = "my-igm-${local.name_suffix}"
   zone = "us-central1-f"
 
-  instance_template  = "${google_compute_instance_template.foobar.self_link}"
+  version {
+    instance_template  = "${google_compute_instance_template.foobar.self_link}"
+    name               = "primary"
+  }
 
   target_pools       = ["${google_compute_target_pool.foobar.self_link}"]
   base_instance_name = "foobar"
 }
 
 data "google_compute_image" "debian_9" {
+  provider = "google-beta"
+
 	family  = "debian-9"
 	project = "debian-cloud"
+}
+
+provider "google-beta"{
+  region = "us-central1"
+  zone   = "us-central1-a"
 }
