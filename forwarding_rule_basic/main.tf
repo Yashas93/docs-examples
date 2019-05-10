@@ -1,5 +1,5 @@
 resource "google_compute_forwarding_rule" "default" {
-  name       = "website-forwarding-rule-${local.name_suffix}"
+  name       = ""
   target     = "${google_compute_target_pool.default.self_link}"
   port_range = "80"
 }
